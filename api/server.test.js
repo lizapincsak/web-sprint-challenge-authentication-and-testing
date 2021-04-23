@@ -2,6 +2,8 @@ const request = require("supertest");
 const db = require("../data/dbConfig.js");
 const server = require('../api/server.js');
 
+const User = require("./users/users-model")
+
 const rob = {username: "Rob", password: "foobar"}
 const hazel = {username: "Hazel", password: ""}
 
@@ -22,6 +24,25 @@ test('sanity', () => {
 
 it("correct env", ()=>{
   expect(process.env.NODE_ENV).toBe("testing")
+})
+
+describe("Users model", () => {
+  describe("add function", () => {
+    it("adds user to db", async () => {
+      let all 
+      await User.add(rob)
+      all = await db("users")
+      expect(all).toHaveLength(1)
+
+      await User.add(hazel)
+      all = await db("users")
+      expect(all).toHaveLength(2)
+    })
+    it("values of users", async() => {
+      const user = await User.add(hazel)
+      expect(user).toMatchObject({id: 1, ...hazel})
+    })
+  })
 })
 
 describe("API calls", () => {
