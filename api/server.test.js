@@ -2,9 +2,6 @@ const request = require("supertest");
 const db = require("../data/dbConfig.js");
 const server = require('../api/server.js');
 
-
-const User = require("./users/users-model");
-
 const rob = {username: "Rob", password: "foobar"}
 const hazel = {username: "Hazel", password: ""}
 
