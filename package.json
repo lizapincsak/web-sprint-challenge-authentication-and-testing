@@ -8,6 +8,9 @@
     "migrate": "knex migrate:latest",
     "test": "cross-env NODE_ENV=testing jest --watchAll --verbose --runInBand"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LambdaSchool/web-sprint-challenge-authentication-and-testing.git"

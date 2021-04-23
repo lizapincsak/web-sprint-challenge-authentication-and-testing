@@ -2,10 +2,11 @@ const request = require("supertest");
 const db = require("../data/dbConfig.js");
 const server = require('../api/server.js');
 
+
 const User = require("./users/users-model");
 
-const bob = {name: "Bob"}
-const mary = {name: "Mary"}
+const rob = {username: "Rob", password: "foobar"}
+const hazel = {username: "Hazel", password: ""}
 
 beforeAll(async ()=>{
   await db.migrate.rollback()
@@ -19,9 +20,78 @@ afterAll(async ()=>{
 })
 
 test('sanity', () => {
-  expect(true).toBe(false)
+  expect(true).toBe(true)
 })
 
 it("correct env", ()=>{
-  expect(process.env.DB_ENV).toBe("testing")
+  expect(process.env.NODE_ENV).toBe("testing")
+})
+
+describe("API calls", () => {
+  describe("[GET] /users", () => {
+    it("responds with 404 because not authorized", async () =>{
+      const res = await request(server).get('/users')
+      expect(res.status).toBe(404)
+    })
+  })
+  describe("[GET] /jokes", () => {
+    it("responds with 404 because not authorized", async () =>{
+      const res = await request(server).get('/users')
+      expect(res.status).toBe(404)
+    })
+  })
+  describe("[post] /register", () => {
+    it("throw error if password is empty", async()=> {
+      try{
+        await  ({
+          username: "Flint",
+          password: ""
+        })
+      } catch(err){
+        expect(err.message).toEqual("username and password required")
+      }
+    })
+    it("throw error if username is empty", async()=> {
+      try{
+        await ({
+          username: "",
+          password: "1234"
+        })
+      } catch(err){
+        expect(err.message).toEqual("username and password required")
+      }
+    })
+    // it("throw error if username is empty", async()=> {
+    //   let res 
+    //         res = await request(server).post("/api/auth/register").send(rob)
+    //         expect(res.body).toMatchObject({id:1, ...rob})
+    // })
+  })
+  describe("[post] /login", () => {
+    it("throw error if password is empty", async()=> {
+      try{
+        await  ({
+          username: "Flint",
+          password: ""
+        })
+      } catch(err){
+        expect(err.message).toEqual("username and password required")
+      }
+    })
+    it("throw error if username is empty", async()=> {
+      try{
+        await ({
+          username: "",
+          password: "1234"
+        })
+      } catch(err){
+        expect(err.message).toEqual("username and password required")
+      }
+    // it("should throw error if empty", async() => {
+    //     let err 
+    //         err = await request(server).post("/api/auth/register").send(hazel)
+    //         expect(err).toEqual("username and password required")
+    // })
+  })
+})
 })
